@@ -114,11 +114,11 @@ pipeline{
                 sh 'docker run -d --name pet1 -p 8082:8080 sreedhar8897/petclinic:latest'
             }
         }
-    //     stage("Deploy To Tomcat"){
-    //         steps{
-    //             sh "sudo cp  /var/lib/jenkins/workspace/petclinic/target/petclinic.war /opt/apache-tomcat-9.0.65/webapps/ "
-    //         }
-    //     }
+        stage("Deploy To Tomcat"){
+            steps{
+                sh "sudo cp  /var/lib/jenkins/workspace/petclinic/target/petclinic.war /opt/apache-tomcat-9.0.65/webapps/ "
+            }
+        }
     //     stage('Deploy to kubernets'){
     //         steps{
     //             script{
@@ -129,16 +129,16 @@ pipeline{
     //         }
     //     }
     // }
-    // post {
-    //  always {
-    //     emailext attachLog: true,
-    //         subject: "'${currentBuild.result}'",
-    //         body: "Project: ${env.JOB_NAME}<br/>" +
-    //             "Build Number: ${env.BUILD_NUMBER}<br/>" +
-    //             "URL: ${env.BUILD_URL}<br/>",
-    //         to: 'postbox.aj99@gmail.com',
-    //         attachmentsPattern: 'trivy.txt'
-    //     }
+    post {
+     always {
+        emailext attachLog: true,
+            subject: "'${currentBuild.result}'",
+            body: "Project: ${env.JOB_NAME}<br/>" +
+                "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                "URL: ${env.BUILD_URL}<br/>",
+            to: 'madithati123@gmail.com',
+            attachmentsPattern: 'trivy.txt'
+        }
     }
 }
 
