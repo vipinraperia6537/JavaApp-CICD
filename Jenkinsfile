@@ -49,12 +49,12 @@ pipeline{
                 sh 'mvn clean install'
             }
         }  
-        // stage("OWASP Dependency Check"){
-        //     steps{
-        //         dependencyCheck additionalArguments: '--scan ./ --format HTML ', odcInstallation: 'DP-Check'
-        //         dependencyCheckPublisher pattern: '**/dependency-check-report.html'
-        //     }
-        // }
+        stage("OWASP Dependency Check"){
+            steps{
+                dependencyCheck additionalArguments: '--scan ./ --format HTML ', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.html'
+            }
+        }
         stage("Docker Build & Push"){
             steps{
                 script{
@@ -118,42 +118,18 @@ pipeline{
             steps{
                 sh "sudo cp  /var/lib/jenkins/workspace/Pet-Clinic/target/petclinic.war /opt/apache-tomcat-9.0.65/webapps/ "
             }
+            post {
+     always {
+        emailext attachLog: true,
+            subject: "'${currentBuild.result}'",
+            body: "Project: ${env.JOB_NAME}<br/>" +
+                "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                "URL: ${env.BUILD_URL}<br/>",
+            to: 'madithati123@gmail.com',
+            attachmentsPattern: 'trivy.txt'
         }
-    //     stage('Deploy to kubernets'){
-    //         steps{
-    //             script{
-    //                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-    //                    sh 'kubectl apply -f deployment.yaml'
-    //               }
-    //             }
-    //         }
-    //     }
-    // }
-    // post {
-    //  always {
-    //     emailext attachLog: true,
-    //         subject: "'${currentBuild.result}'",
-    //         body: "Project: ${env.JOB_NAME}<br/>" +
-    //             "Build Number: ${env.BUILD_NUMBER}<br/>" +
-    //             "URL: ${env.BUILD_URL}<br/>",
-    //         to: 'madithati123@gmail.com',
-    //         attachmentsPattern: 'trivy.txt'
-    //     }
-    // }
+    }
+        }
+    }
 }
-}
-
-
-// try this approval stage also 
-
-// stage('Manual Approval') {
-//   timeout(time: 10, unit: 'MINUTES') {
-//     mail to: 'postbox.aj99@gmail.com',
-//          subject: "${currentBuild.result} CI: ${env.JOB_NAME}",
-//          body: "Project: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nGo to ${env.BUILD_URL} and approve deployment"
-//     input message: "Deploy ${params.project_name}?", 
-//            id: "DeployGate", 
-//            submitter: "approver", 
-//            parameters: [choice(name: 'action', choices: ['Deploy'], description: 'Approve deployment')]
-//   }
-// }
+   
