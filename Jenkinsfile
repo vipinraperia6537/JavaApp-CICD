@@ -116,7 +116,7 @@ pipeline{
         }
         stage("Deploy To Tomcat"){
             steps{
-                sh "sudo cp  /var/lib/jenkins/workspace/petclinic/target/petclinic.war /opt/apache-tomcat-9.0.65/webapps/ "
+                sh "sudo cp  /var/lib/jenkins/workspace/Pet-Clinic/target/petclinic.war /opt/apache-tomcat-9.0.65/webapps/ "
             }
         }
     //     stage('Deploy to kubernets'){
